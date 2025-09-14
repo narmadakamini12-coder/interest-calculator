@@ -1,65 +1,145 @@
 <!DOCTYPE html>
 <html lang="te">
 <head>
-  <meta charset="UTF-8" />
-  <title>వడ్డీ లెక్కకట్టు</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>వడ్డీ లెక్కకట్టు | Interest Calculator</title>
   <style>
-    body { font-family: Arial; text-align: center; margin: 40px; }
-    input { padding: 8px; margin: 6px; font-size: 16px; width: 180px; }
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .container { display: flex; justify-content: space-between; flex-wrap: wrap; }
+    .box {
+      flex: 1;
+      min-width: 300px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 10px;
+      text-align: center;
+      box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+    }
+    h2 { margin-bottom: 5px; }
+    input { padding: 10px; margin: 6px; font-size: 16px; width: 80%; max-width: 240px; }
+    label { display: block; margin-top: 10px; font-weight: bold; }
     button { padding: 10px 18px; font-size: 16px; border: none; border-radius: 6px; margin: 6px; cursor: pointer; color: #fff; }
-    #calcBtn { background: #28a745; } /* green */
-    #calcBtn:hover { background: #1e7e34; }
-    #resetBtn { background: #dc3545; } /* red */
-    #resetBtn:hover { background: #b21f2d; }
-    pre { text-align: left; display: inline-block; margin-top: 18px; font-size: 15px; white-space: pre-line; }
-    .note { margin-bottom: 10px; color: #444; }
+    .calcBtn { background: #28a745; }
+    .calcBtn:hover { background: #1e7e34; }
+    .resetBtn { background: #dc3545; }
+    .resetBtn:hover { background: #b21f2d; }
+    pre { text-align: left; display: inline-block; margin-top: 18px; font-size: 15px; white-space: pre-line; max-width: 95%; }
+    .note { margin-bottom: 12px; color: #444; font-size: 14px; }
     .error { color: darkred; font-weight: bold; }
   </style>
 </head>
 <body>
-  <h2>💰 వడ్డీ లెక్కకట్టు <span style="font-size:16px; color:#555;">(ఇది మన కడప ప్రజలకోసం)</span></h2>
-  <p class="note">వడ్డీ రేటు: <b>నెలకు ఒక రూపాయి యాభై పైసా</b></p>
+  <div class="container">
+    <!-- Telugu Box -->
+    <div class="box">
+      <h2>💰 వడ్డీ లెక్కకట్టు</h2>
+      <p class="note">(ఇది మన కడప ప్రజలకోసం)</p>
+      <p class="note">వడ్డీ రేటు: <b>నెలకు ఒక రూపాయి యాభై పైసా</b></p>
 
-  <div>
-    <p><b>మీ మొత్తం రూపాయలను క్రింద బాక్స్ లో ఎంటర్ చేయండి</b></p>
-    <input id="amount" type="number"><br>
+      <p><b>మీ మొత్తం రూపాయలను క్రింద బాక్స్ లో ఎంటర్ చేయండి</b></p>
+      <input id="amount-te" type="number"><br>
 
-    <label>కాలం:</label><br>
-    <input id="years" type="number" placeholder="సంవత్సరాలు">
-    <input id="months" type="number" placeholder="నెలలు">
-    <input id="days" type="number" placeholder="రోజులు"><br>
+      <label for="years-te">సంవత్సరాలు:</label>
+      <input id="years-te" type="number"><br>
 
-    <button id="calcBtn">లెక్కించు</button>
-    <button id="resetBtn">తుడిచివేయి</button>
+      <label for="months-te">నెలలు:</label>
+      <input id="months-te" type="number"><br>
+
+      <label for="days-te">రోజులు:</label>
+      <input id="days-te" type="number"><br>
+
+      <button class="calcBtn" onclick="calc('te')">లెక్కించు</button>
+      <button class="resetBtn" onclick="resetForm('te')">తుడిచివేయి</button>
+
+      <pre id="result-te"></pre>
+    </div>
+
+    <!-- English Box -->
+    <div class="box">
+      <h2>💰 Interest Calculator</h2>
+      <p class="note">(For our Kadapa People)</p>
+      <p class="note">Interest Rate: <b>₹1.50 per month (18% yearly)</b></p>
+
+      <p><b>Enter your amount in rupees below</b></p>
+      <input id="amount-en" type="number"><br>
+
+      <label for="years-en">Years:</label>
+      <input id="years-en" type="number"><br>
+
+      <label for="months-en">Months:</label>
+      <input id="months-en" type="number"><br>
+
+      <label for="days-en">Days:</label>
+      <input id="days-en" type="number"><br>
+
+      <button class="calcBtn" onclick="calc('en')">Calculate</button>
+      <button class="resetBtn" onclick="resetForm('en')">Clear</button>
+
+      <pre id="result-en"></pre>
+    </div>
   </div>
 
-  <pre id="result"></pre>
-
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const calcBtn = document.getElementById('calcBtn');
-      const resetBtn = document.getElementById('resetBtn');
-      const resultEl = document.getElementById('result');
+    function calc(lang) {
+      const p = parseFloat(document.getElementById('amount-' + lang).value);
+      const y = parseInt(document.getElementById('years-' + lang).value) || 0;
+      const m = parseInt(document.getElementById('months-' + lang).value) || 0;
+      const d = parseInt(document.getElementById('days-' + lang).value) || 0;
+      const resultEl = document.getElementById('result-' + lang);
 
-      calcBtn.addEventListener('click', function () {
-        try {
-          const p = parseFloat(document.getElementById('amount').value);
-          const y = parseInt(document.getElementById('years').value) || 0;
-          const m = parseInt(document.getElementById('months').value) || 0;
-          const d = parseInt(document.getElementById('days').value) || 0;
+      if (isNaN(p) || p <= 0) {
+        resultEl.textContent = (lang === 'te')
+          ? '⚠️ దయచేసి సరైన మొత్తం ఇవ్వండి!'
+          : '⚠️ Please enter a valid amount!';
+        resultEl.classList.add('error');
+        return;
+      }
+      resultEl.classList.remove('error');
 
-          if (isNaN(p) || p <= 0) {
-            resultEl.textContent = '⚠️ దయచేసి సరైన మొత్తం ఇవ్వండి!';
-            resultEl.classList.add('error');
-            return;
-          }
-          resultEl.classList.remove('error');
+      const rate = 0.18; // 18% yearly
+      let current = p;
+      let details = '';
 
-          const rate = 0.18; // 18%
-          let current = p;
-          let details = '';
+      for (let i = 1; i <= y; i++) {
+        const intr = current * rate;
+        details += (lang === 'te')
+          ? `${i} సంవత్సరం → మూలధనం = ₹${current.toFixed(2)}, వడ్డీ = ₹${intr.toFixed(2)}, మొత్తం = ₹${(current + intr).toFixed(2)}\n`
+          : `${i} Year → Principal = ₹${current.toFixed(2)}, Interest = ₹${intr.toFixed(2)}, Total = ₹${(current + intr).toFixed(2)}\n`;
+        current += intr;
+      }
 
-          // yearly compound
-          for (let i = 1; i <= y; i++) {
-            const intr = current * rate;
-            details += `${i} సంవత్సరం → మూలధనం = ₹${current.toFixed(2)}, వడ్డీ = ₹${int
+      if (m > 0) {
+        const intr = current * rate * (m / 12);
+        details += (lang === 'te')
+          ? `${m} నెలలు → మూలధనం = ₹${current.toFixed(2)}, వడ్డీ = ₹${intr.toFixed(2)}, మొత్తం = ₹${(current + intr).toFixed(2)}\n`
+          : `${m} Months → Principal = ₹${current.toFixed(2)}, Interest = ₹${intr.toFixed(2)}, Total = ₹${(current + intr).toFixed(2)}\n`;
+        current += intr;
+      }
+
+      if (d > 0) {
+        const intr = current * rate * (d / 365);
+        details += (lang === 'te')
+          ? `${d} రోజులు → మూలధనం = ₹${current.toFixed(2)}, వడ్డీ = ₹${intr.toFixed(2)}, మొత్తం = ₹${(current + intr).toFixed(2)}\n`
+          : `${d} Days → Principal = ₹${current.toFixed(2)}, Interest = ₹${intr.toFixed(2)}, Total = ₹${(current + intr).toFixed(2)}\n`;
+        current += intr;
+      }
+
+      details += (lang === 'te')
+        ? `\n👉 చివరి మొత్తం = ₹${current.toFixed(2)}`
+        : `\n👉 Final Amount = ₹${current.toFixed(2)}`;
+      resultEl.textContent = details;
+    }
+
+    function resetForm(lang) {
+      document.getElementById('amount-' + lang).value = '';
+      document.getElementById('years-' + lang).value = '';
+      document.getElementById('months-' + lang).value = '';
+      document.getElementById('days-' + lang).value = '';
+      document.getElementById('result-' + lang).textContent = '';
+      document.getElementById('result-' + lang).classList.remove('error');
+    }
+  </script>
+</body>
+</html>
