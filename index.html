@@ -6,48 +6,47 @@
   <title>వడ్డీ లెక్కకట్టు | Interest Calculator</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 20px; }
-    .container { display: flex; justify-content: space-between; flex-wrap: wrap; }
-    .box {
-      flex: 1;
-      min-width: 300px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      padding: 15px;
-      margin: 10px;
-      text-align: center;
-      box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
-    }
-    h2 { margin-bottom: 5px; }
-    input { padding: 10px; margin: 6px; font-size: 16px; width: 80%; max-width: 240px; }
+    .container { display: flex; justify-content: space-around; flex-wrap: wrap; }
+    .card { width: 45%; min-width: 300px; border: 1px solid #ccc; border-radius: 8px; padding: 20px; margin: 10px; }
+    h2 { text-align: center; }
+    input { padding: 8px; margin: 6px; font-size: 16px; width: 160px; }
     label { display: block; margin-top: 10px; font-weight: bold; }
-    button { padding: 10px 18px; font-size: 16px; border: none; border-radius: 6px; margin: 6px; cursor: pointer; color: #fff; }
+    button { padding: 10px 18px; font-size: 16px; border: none; border-radius: 6px; margin: 8px; cursor: pointer; color: #fff; }
+    .choiceBtn { background: #007bff; }
+    .choiceBtn.active { background: #0056b3; }
     .calcBtn { background: #28a745; }
-    .calcBtn:hover { background: #1e7e34; }
     .resetBtn { background: #dc3545; }
-    .resetBtn:hover { background: #b21f2d; }
-    pre { text-align: left; display: inline-block; margin-top: 18px; font-size: 15px; white-space: pre-line; max-width: 95%; }
-    .note { margin-bottom: 12px; color: #444; font-size: 14px; }
-    .error { color: darkred; font-weight: bold; }
+    pre { text-align: left; display: inline-block; margin-top: 18px; font-size: 15px; white-space: pre-line; }
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- Telugu Box -->
-    <div class="box">
+    
+    <!-- Telugu Version -->
+    <div class="card">
       <h2>💰 వడ్డీ లెక్కకట్టు</h2>
-      <p class="note">(ఇది మన కడప ప్రజలకోసం)</p>
-      <p class="note">వడ్డీ రేటు: <b>నెలకు ఒక రూపాయి యాభై పైసా</b></p>
+      <button class="choiceBtn" id="fixedBtn-te" onclick="chooseRate('fixed','te')">
+        మీకు 1.50 పైసలా వడ్డీ లెక్క కావాలా? అయితే దీనిమీద నొక్కండి
+      </button>
+      <button class="choiceBtn" id="customBtn-te" onclick="chooseRate('custom','te')">
+        వేరే వడ్డీ కావాలా? అయితే ఇక్కడ నొక్కండి
+      </button>
+
+      <div id="customRateBox-te" style="display:none;">
+        <label>ఎన్ని రూపాయలు వడ్డీ? (1,2,3,4,5,6)</label>
+        <input id="customRate-te" type="number" min="1" max="6">
+      </div>
 
       <p><b>మీ మొత్తం రూపాయలను క్రింద బాక్స్ లో ఎంటర్ చేయండి</b></p>
       <input id="amount-te" type="number"><br>
 
-      <label for="years-te">సంవత్సరాలు:</label>
+      <label>సంవత్సరాలు:</label>
       <input id="years-te" type="number"><br>
 
-      <label for="months-te">నెలలు:</label>
+      <label>నెలలు:</label>
       <input id="months-te" type="number"><br>
 
-      <label for="days-te">రోజులు:</label>
+      <label>రోజులు:</label>
       <input id="days-te" type="number"><br>
 
       <button class="calcBtn" onclick="calc('te')">లెక్కించు</button>
@@ -56,22 +55,31 @@
       <pre id="result-te"></pre>
     </div>
 
-    <!-- English Box -->
-    <div class="box">
+    <!-- English Version -->
+    <div class="card">
       <h2>💰 Interest Calculator</h2>
-      <p class="note">(For our Kadapa People)</p>
-      <p class="note">Interest Rate: <b>₹1.50 per month (18% yearly)</b></p>
+      <button class="choiceBtn" id="fixedBtn-en" onclick="chooseRate('fixed','en')">
+        Want 1.50 Interest Calculation? Click Here
+      </button>
+      <button class="choiceBtn" id="customBtn-en" onclick="chooseRate('custom','en')">
+        Want Different Interest? Click Here
+      </button>
 
-      <p><b>Enter your amount in rupees below</b></p>
+      <div id="customRateBox-en" style="display:none;">
+        <label>How many rupees interest? (1,2,3,4,5,6)</label>
+        <input id="customRate-en" type="number" min="1" max="6">
+      </div>
+
+      <p><b>Enter your total amount in the box below</b></p>
       <input id="amount-en" type="number"><br>
 
-      <label for="years-en">Years:</label>
+      <label>Years:</label>
       <input id="years-en" type="number"><br>
 
-      <label for="months-en">Months:</label>
+      <label>Months:</label>
       <input id="months-en" type="number"><br>
 
-      <label for="days-en">Days:</label>
+      <label>Days:</label>
       <input id="days-en" type="number"><br>
 
       <button class="calcBtn" onclick="calc('en')">Calculate</button>
@@ -79,66 +87,100 @@
 
       <pre id="result-en"></pre>
     </div>
+
   </div>
 
   <script>
+    let chosenType = { te: 'fixed', en: 'fixed' };
+
+    function chooseRate(type, lang) {
+      chosenType[lang] = type;
+      document.getElementById('fixedBtn-'+lang).classList.remove('active');
+      document.getElementById('customBtn-'+lang).classList.remove('active');
+      if (type === 'fixed') {
+        document.getElementById('fixedBtn-'+lang).classList.add('active');
+        document.getElementById('customRateBox-'+lang).style.display = 'none';
+      } else {
+        document.getElementById('customBtn-'+lang).classList.add('active');
+        document.getElementById('customRateBox-'+lang).style.display = 'block';
+      }
+      resetForm(lang);
+    }
+
     function calc(lang) {
-      const p = parseFloat(document.getElementById('amount-' + lang).value);
-      const y = parseInt(document.getElementById('years-' + lang).value) || 0;
-      const m = parseInt(document.getElementById('months-' + lang).value) || 0;
-      const d = parseInt(document.getElementById('days-' + lang).value) || 0;
-      const resultEl = document.getElementById('result-' + lang);
+      const p = parseFloat(document.getElementById('amount-'+lang).value);
+      const y = parseInt(document.getElementById('years-'+lang).value) || 0;
+      const m = parseInt(document.getElementById('months-'+lang).value) || 0;
+      const d = parseInt(document.getElementById('days-'+lang).value) || 0;
+      const resultEl = document.getElementById('result-'+lang);
 
       if (isNaN(p) || p <= 0) {
-        resultEl.textContent = (lang === 'te')
-          ? '⚠️ దయచేసి సరైన మొత్తం ఇవ్వండి!'
-          : '⚠️ Please enter a valid amount!';
-        resultEl.classList.add('error');
+        resultEl.textContent = (lang==='te') ? '⚠️ దయచేసి సరైన మొత్తం ఇవ్వండి!' : '⚠️ Please enter a valid amount!';
         return;
       }
-      resultEl.classList.remove('error');
 
-      const rate = 0.18; // 18% yearly
+      let rate, isCompound;
+      if (chosenType[lang] === 'fixed') {
+        rate = 0.18; // 18% per year
+        isCompound = true;
+      } else {
+        const rupeeRate = parseInt(document.getElementById('customRate-'+lang).value);
+        if (!rupeeRate || rupeeRate < 1 || rupeeRate > 6) {
+          resultEl.textContent = (lang==='te') ? '⚠️ దయచేసి సరైన రూపాయి రేట్ ఇవ్వండి (1-6)!' : '⚠️ Please enter valid rupee rate (1-6)!';
+          return;
+        }
+        rate = 0.12 * rupeeRate;
+        isCompound = false;
+      }
+
       let current = p;
       let details = '';
 
-      for (let i = 1; i <= y; i++) {
-        const intr = current * rate;
-        details += (lang === 'te')
-          ? `${i} సంవత్సరం → మూలధనం = ₹${current.toFixed(2)}, వడ్డీ = ₹${intr.toFixed(2)}, మొత్తం = ₹${(current + intr).toFixed(2)}\n`
-          : `${i} Year → Principal = ₹${current.toFixed(2)}, Interest = ₹${intr.toFixed(2)}, Total = ₹${(current + intr).toFixed(2)}\n`;
-        current += intr;
+      if (isCompound) {
+        for (let i = 1; i <= y; i++) {
+          const intr = current * rate;
+          details += (lang==='te') ?
+            `${i} సంవత్సరం → మూలధనం = ₹${current.toFixed(2)}, వడ్డీ = ₹${intr.toFixed(2)}, మొత్తం = ₹${(current+intr).toFixed(2)}\n`
+            : `${i} Year → Principal = ₹${current.toFixed(2)}, Interest = ₹${intr.toFixed(2)}, Total = ₹${(current+intr).toFixed(2)}\n`;
+          current += intr;
+        }
+      } else {
+        const yearlyInterest = p * rate;
+        for (let i = 1; i <= y; i++) {
+          details += (lang==='te') ?
+            `${i} సంవత్సరం → మూలధనం = ₹${p.toFixed(2)}, వడ్డీ = ₹${yearlyInterest.toFixed(2)}, మొత్తం = ₹${(p+yearlyInterest*i).toFixed(2)}\n`
+            : `${i} Year → Principal = ₹${p.toFixed(2)}, Interest = ₹${yearlyInterest.toFixed(2)}, Total = ₹${(p+yearlyInterest*i).toFixed(2)}\n`;
+        }
+        current = p + yearlyInterest * y;
       }
 
       if (m > 0) {
-        const intr = current * rate * (m / 12);
-        details += (lang === 'te')
-          ? `${m} నెలలు → మూలధనం = ₹${current.toFixed(2)}, వడ్డీ = ₹${intr.toFixed(2)}, మొత్తం = ₹${(current + intr).toFixed(2)}\n`
-          : `${m} Months → Principal = ₹${current.toFixed(2)}, Interest = ₹${intr.toFixed(2)}, Total = ₹${(current + intr).toFixed(2)}\n`;
+        const intr = (isCompound ? current : p) * rate * (m / 12);
+        details += (lang==='te') ?
+          `${m} నెలలు → వడ్డీ = ₹${intr.toFixed(2)}, మొత్తం = ₹${(current+intr).toFixed(2)}\n`
+          : `${m} Months → Interest = ₹${intr.toFixed(2)}, Total = ₹${(current+intr).toFixed(2)}\n`;
         current += intr;
       }
 
       if (d > 0) {
-        const intr = current * rate * (d / 365);
-        details += (lang === 'te')
-          ? `${d} రోజులు → మూలధనం = ₹${current.toFixed(2)}, వడ్డీ = ₹${intr.toFixed(2)}, మొత్తం = ₹${(current + intr).toFixed(2)}\n`
-          : `${d} Days → Principal = ₹${current.toFixed(2)}, Interest = ₹${intr.toFixed(2)}, Total = ₹${(current + intr).toFixed(2)}\n`;
+        const intr = (isCompound ? current : p) * rate * (d / 365);
+        details += (lang==='te') ?
+          `${d} రోజులు → వడ్డీ = ₹${intr.toFixed(2)}, మొత్తం = ₹${(current+intr).toFixed(2)}\n`
+          : `${d} Days → Interest = ₹${intr.toFixed(2)}, Total = ₹${(current+intr).toFixed(2)}\n`;
         current += intr;
       }
 
-      details += (lang === 'te')
-        ? `\n👉 చివరి మొత్తం = ₹${current.toFixed(2)}`
-        : `\n👉 Final Amount = ₹${current.toFixed(2)}`;
+      details += (lang==='te') ? `\n👉 చివరి మొత్తం = ₹${current.toFixed(2)}` : `\n👉 Final Amount = ₹${current.toFixed(2)}`;
       resultEl.textContent = details;
     }
 
     function resetForm(lang) {
-      document.getElementById('amount-' + lang).value = '';
-      document.getElementById('years-' + lang).value = '';
-      document.getElementById('months-' + lang).value = '';
-      document.getElementById('days-' + lang).value = '';
-      document.getElementById('result-' + lang).textContent = '';
-      document.getElementById('result-' + lang).classList.remove('error');
+      document.getElementById('amount-'+lang).value = '';
+      document.getElementById('years-'+lang).value = '';
+      document.getElementById('months-'+lang).value = '';
+      document.getElementById('days-'+lang).value = '';
+      document.getElementById('customRate-'+lang).value = '';
+      document.getElementById('result-'+lang).textContent = '';
     }
   </script>
 </body>
