@@ -5,7 +5,7 @@
   <title>వడ్డీ లెక్కకట్టు</title>
   <style>
     body { font-family: Arial; text-align: center; margin: 40px; }
-    input { padding: 8px; margin: 6px; font-size: 16px; width: 140px; }
+    input { padding: 8px; margin: 6px; font-size: 16px; width: 180px; }
     button { padding: 10px 18px; font-size: 16px; border: none; border-radius: 6px; margin: 6px; cursor: pointer; color: #fff; }
     #calcBtn { background: #28a745; } /* green */
     #calcBtn:hover { background: #1e7e34; }
@@ -17,12 +17,12 @@
   </style>
 </head>
 <body>
-  <h2>💰 వడ్డీ లెక్కకట్టు</h2>
-  <p class="note">వడ్డీ రేటు: <b>18% సంవత్సరానికి</b> (అంటే నెలకు ఒక రూపాయి యాభై పైసా)</p>
+  <h2>💰 వడ్డీ లెక్కకట్టు <span style="font-size:16px; color:#555;">(ఇది మన కడప ప్రజలకోసం)</span></h2>
+  <p class="note">వడ్డీ రేటు: <b>నెలకు ఒక రూపాయి యాభై పైసా</b></p>
 
   <div>
-    <label>మొత్తం (₹):</label><br>
-    <input id="amount" type="number" placeholder="ఉదా: 300000"><br>
+    <p><b>మీ మొత్తం రూపాయలను క్రింద బాక్స్ లో ఎంటర్ చేయండి</b></p>
+    <input id="amount" type="number"><br>
 
     <label>కాలం:</label><br>
     <input id="years" type="number" placeholder="సంవత్సరాలు">
@@ -41,11 +41,8 @@
       const resetBtn = document.getElementById('resetBtn');
       const resultEl = document.getElementById('result');
 
-      console.log('Interest app: JS loaded');
-
       calcBtn.addEventListener('click', function () {
         try {
-          console.log('Calc clicked');
           const p = parseFloat(document.getElementById('amount').value);
           const y = parseInt(document.getElementById('years').value) || 0;
           const m = parseInt(document.getElementById('months').value) || 0;
@@ -65,42 +62,4 @@
           // yearly compound
           for (let i = 1; i <= y; i++) {
             const intr = current * rate;
-            details += `${i} సంవత్సరం → మూలధనం = ₹${current.toFixed(2)}, వడ్డీ = ₹${intr.toFixed(2)}, మొత్తం = ₹${(current + intr).toFixed(2)}\n`;
-            current += intr;
-          }
-
-          // months (simple on current)
-          if (m > 0) {
-            const intr = current * rate * (m / 12);
-            details += `${m} నెలలు → మూలధనం = ₹${current.toFixed(2)}, వడ్డీ = ₹${intr.toFixed(2)}, మొత్తం = ₹${(current + intr).toFixed(2)}\n`;
-            current += intr;
-          }
-
-          // days (simple on current)
-          if (d > 0) {
-            const intr = current * rate * (d / 365);
-            details += `${d} రోజులు → మూలధనం = ₹${current.toFixed(2)}, వడ్డీ = ₹${intr.toFixed(2)}, మొత్తం = ₹${(current + intr).toFixed(2)}\n`;
-            current += intr;
-          }
-
-          details += `\n👉 చివరి మొత్తం = ₹${current.toFixed(2)}`;
-          resultEl.textContent = details;
-        } catch (err) {
-          console.error('Calc error:', err);
-          resultEl.textContent = 'Error: ' + err.message;
-          resultEl.classList.add('error');
-        }
-      });
-
-      resetBtn.addEventListener('click', function () {
-        document.getElementById('amount').value = '';
-        document.getElementById('years').value = '';
-        document.getElementById('months').value = '';
-        document.getElementById('days').value = '';
-        resultEl.textContent = '';
-        resultEl.classList.remove('error');
-      });
-    });
-  </script>
-</body>
-</html>
+            details += `${i} సంవత్సరం → మూలధనం = ₹${current.toFixed(2)}, వడ్డీ = ₹${int
